@@ -1,0 +1,34 @@
+.chat-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  position: relative;
+}
+
+.empty-chat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  padding: 2rem;
+  text-align: center;
+}
+
+.empty-chat h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.empty-chat p {
+  color: var(--secondary-color);
+  margin-bottom: 2rem;
+}
+
+.input-area {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+  background-color: white;
+}
