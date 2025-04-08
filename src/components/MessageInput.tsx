@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './MessageInput.css';
 
 interface MessageInputProps {
@@ -8,18 +8,44 @@ interface MessageInputProps {
 
 const MessageInput = ({ onSendMessage, isDisabled }: MessageInputProps) => {
   const [message, setMessage] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isDisabled && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isDisabled]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isDisabled && inputRef.current && document.activeElement !== inputRef.current) {
+        inputRef.current.focus();
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isDisabled]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim() && !isDisabled) {
       onSendMessage(message);
       setMessage('');
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
     }
   };
 
   return (
     <form className="message-input-form" onSubmit={handleSubmit}>
       <input
+        ref={inputRef}
         type="text"
         className="message-input"
         value={message}

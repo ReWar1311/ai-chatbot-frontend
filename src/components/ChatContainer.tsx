@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import SuggestionList from './SuggestionList';
@@ -50,7 +50,7 @@ const chatApiService = async (chatState: ChatState[], userMessage: Message): Pro
 const SUGGESTION_SETS = {
   DEFAULT: [
     { id: '1', text: 'How can I connect with Prashant Rewar' },
-    { id: '2', text: 'Tell me something about his top projects?' },
+    { id: '2', text: 'Tell me something about his top projects' },
     { id: '3', text: 'Explain a Random Project' },
   ],
   FOLLOW_UP: [
@@ -66,7 +66,6 @@ const SUGGESTION_SETS = {
 };
 
 const ChatContainer = ({ conversation, updateConversation }: ChatContainerProps) => {
-  // Add a check if conversation is undefined
   if (!conversation) {
     return <div className="loading">Loading conversation...</div>;
   }
@@ -74,8 +73,10 @@ const ChatContainer = ({ conversation, updateConversation }: ChatContainerProps)
   const [isLoading, setIsLoading] = useState(false);
   const [chatState, setChatState] = useState<ChatState[]>([]);
   const [suggestions, setSuggestions] = useState<SuggestionPrompt[]>(SUGGESTION_SETS.DEFAULT);
-
+  const currentConversationIdRef = useRef<string>(conversation.id);
+  
   useEffect(() => {
+    currentConversationIdRef.current = conversation.id;
     loadChatState();
   }, [conversation.id]);
 
@@ -120,8 +121,12 @@ const ChatContainer = ({ conversation, updateConversation }: ChatContainerProps)
     }
   };
 
-  useEffect(() => {
-    const lastMessage = chatState[chatState.length - 1];
+  // const getCurrentConversation = () => {
+  //   return conversation;
+  // };
+
+  const updateBOT = (chatStateInput: ChatState[], latestMessages: Message[]) => {
+    const lastMessage = chatStateInput[chatStateInput.length - 1];
     
     if (!lastMessage || lastMessage.role !== 'assistant') {
       return;
@@ -149,16 +154,19 @@ const ChatContainer = ({ conversation, updateConversation }: ChatContainerProps)
         timestamp: new Date()
       };
 
-      updateConversation({
-        ...conversation,
-        messages: [...conversation.messages, botMessage]
-      });
+      const updatedMessages = [...latestMessages, botMessage];
       
+      const updatedConversation = {
+        ...conversation,
+        messages: updatedMessages,
+      };
+
+      updateConversation(updatedConversation);
       setSuggestions(generateSuggestions());
     } catch (error) {
       console.error('Error processing bot response:', error);
     }
-  }, [chatState]);
+  };
 
   const sendMessage = async (content: string) => {
     if (!content.trim()) return;
@@ -179,10 +187,16 @@ const ChatContainer = ({ conversation, updateConversation }: ChatContainerProps)
     
     updateConversation(updatedConversation);
     
+    const conversationIdForThisMessage = conversation.id;
+    
     try {
       setIsLoading(true);
       const botResponse = await chatApiService(chatState, userMessage);
-      setChatState(botResponse);
+      
+      if (currentConversationIdRef.current === conversationIdForThisMessage) {
+        setChatState(botResponse);
+        updateBOT(botResponse, updatedMessages);
+      }
     } catch (error) {
       console.error('Failed to get bot response:', error);
     } finally {
