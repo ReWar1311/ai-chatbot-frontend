@@ -220,8 +220,14 @@ const ChatContainer = ({ conversation, updateConversation }: ChatContainerProps)
     <div className="chat-container">
       {conversation.messages.length === 0 ? (
         <div className="empty-chat">
-          <h2>Start a new conversation</h2>
-          <p>Ask me anything or try one of the suggestions below</p>
+          {/* <div className="empty-chat-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-4h2v2h-2zm1-10c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+            </svg>
+          </div> */}
+          <h2>Welcome to ReWar's AI Assistant</h2>
+          <p>I can help you learn about Prashant Rewar, his projects, skills, and experience. What would you like to know?</p>
+          
           <SuggestionList suggestions={suggestions} onSelectSuggestion={sendMessage} />
         </div>
       ) : (

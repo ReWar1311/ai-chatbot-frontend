@@ -1,6 +1,7 @@
 .chat-container {
   flex-grow: 1;
   display: flex;
+  padding-top: 60px;
   flex-direction: column;
   height: calc(100vh - 60px);
   position: relative;
@@ -13,7 +14,8 @@
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-  padding: 2rem;
+  padding: 1rem;
+  margin: 0;
   text-align: center;
 }
 
