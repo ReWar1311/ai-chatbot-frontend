@@ -4,6 +4,7 @@
   flex-direction: column;
   height: calc(100vh - 60px);
   position: relative;
+  overflow: hidden; 
 }
 
 .empty-chat {
@@ -31,4 +32,30 @@
   padding: 1rem;
   border-top: 1px solid var(--border-color);
   background-color: white;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.message-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 0.5rem;
+  max-height: calc(100% - 70px);
+}
+
+@media (max-width: 768px) {
+  .input-area {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0.75rem;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .message-list {
+    padding-bottom: 110px;
+  }
 }
