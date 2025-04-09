@@ -3,7 +3,8 @@
   display: flex;
   padding-top: 60px;
   flex-direction: column;
-  height: calc(100vh - 60px);
+  /* height: calc(100vh - 60px); */
+  height: auto;
   position: relative;
   overflow: hidden; 
 }
